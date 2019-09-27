@@ -36,32 +36,6 @@ npm run build
 
 The output will be at `www/` folder
 
-## Use with cordova
-Cordova is not enabled by default, so make sure to remove the comment tags around the `<script src="cordova.js"></script>` line in [projectroot]/src/index.html
-```
-<body>
-  <div id="app"></div>
-
-  <!-- Cordova -->
-
-  <script src="cordova.js"></script>
-
-  <!-- built script files will be auto injected -->
-</body>
-```
-It will be added during the build process to Android/iOS.
-
-Just put the contents of `www` folder in your cordova's project root `www` folder
-
-## One command install
-
-```
-git clone https://github.com/framework7io/framework7-template-vue-webpack my-app &&
-cd my-app &&
-npm install &&
-npm run dev
-```
-
 ## Build Setup
 
 ``` bash
