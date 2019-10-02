@@ -6,6 +6,7 @@
     "build-dev": "node ./build/dev.js",
     "build-prod": "node ./build/prod.js",
     "dev-server": "nodemon ./src/server/server.js",
+    "dev-client": "webpack --config ./build/webpack.config.dev.js --watch",
     "dev": "webpack-dev-server --config ./build/webpack.config.dev.js",
     "prod": "webpack-dev-server --config ./build/webpack.config.prod.js",
     "start": "npm run dev"
@@ -25,10 +26,12 @@
   "license": "MIT",
   "dependencies": {
     "axios": "^0.19.0",
+    "express": "^4.17.1",
     "framework7": "^4.0.0",
     "framework7-icons": "^2.2.0",
     "framework7-vue": "^4.0.0",
     "nodemon": "^1.19.1",
+    "socket.io": "^2.3.0",
     "vue": "^2.6.3",
     "vuex": "^3.1.1",
     "websocket": "^1.0.29",

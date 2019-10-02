@@ -13,8 +13,8 @@
     </f7-block>
     <f7-block-title>games</f7-block-title>
     <f7-list>
-      <f7-list-item link="/puzzle/" title="猜謎"></f7-list-item>
-      <f7-list-item link="/bingo/" title="賓果"></f7-list-item>
+      <f7-list-item link="/puzzle/" title="猜謎[首場]"></f7-list-item>
+      <f7-list-item link="/puzzle/2/" title="猜謎[中場]"></f7-list-item>
     </f7-list>
   </f7-page>
 </template>

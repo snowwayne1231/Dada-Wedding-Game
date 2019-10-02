@@ -1,56 +1,51 @@
 
 const {onmessage} = require('./ws/onmessage');
 const {onclose} = require('./ws/onclose');
-const WebSocket = require('ws');
 
-const wss = new WebSocket.Server({
-  port: 8080,
-  perMessageDeflate: {
-    zlibDeflateOptions: {
-      // See zlib defaults.
-      chunkSize: 1024,
-      memLevel: 7,
-      level: 3
-    },
-    zlibInflateOptions: {
-      chunkSize: 10 * 1024
-    },
-    // Other options settable:
-    clientNoContextTakeover: true, // Defaults to negotiated value.
-    serverNoContextTakeover: true, // Defaults to negotiated value.
-    serverMaxWindowBits: 10, // Defaults to negotiated value.
-    // Below options specified as default values.
-    concurrencyLimit: 10, // Limits zlib concurrency for perf.
-    threshold: 1024 // Size (in bytes) below which messages
-    // should not be compressed.
-  }
-});
+const express = require('express');
+const path = require('path');
 
-var clients = [];
+const app = express();
+const http = require('http').createServer(app);
+const io = require('socket.io')(http);
+const port = 80;
+
+const clients = [];
 const nameMapData = {};
 
-wss.on('connection', function connection(ws, req) {
+const index_file_path = path.resolve(__dirname + '/../../www/index.html');
+const js_file_path = path.resolve(__dirname + '/../../www/app.js');
+const css_file_path = path.resolve(__dirname + '/../../www/app.css');
 
-    ws.on('message', function incoming(message) {
-        var coming = onmessage(ws, clients, message);
-        if (ws.name) {
-            if (!nameMapData[ws.name]) {
-                nameMapData[ws.name] = {
-                    "puzzle": {"answers": []},
-                    "bingo": {},
-                };
-            }
-            var data = nameMapData[ws.name];
-        }
+app.get('/', (req, res) => {
+    res.sendFile(index_file_path);
+});
+
+app.get('/app.js', (req, res) => {
+    res.sendFile(js_file_path);
+});
+
+app.get('/app.css', (req, res) => {
+    res.sendFile(css_file_path);
+});
+
+io.on('connection', function(socket){
+    clients.push(socket);
+    console.log('a user connected: ', clients.length);
+
+    socket.on('disconnect', function(){
+        onclose(socket, clients);
+        console.log('user disconnected: ', clients.length);
     });
 
-    ws.on('close', function close() {
-        onclose(ws, clients);
+    socket.on('message', function(msg){
+        console.log('message: ' + msg);
+        var comingJSON = onmessage(socket, clients, msg);
+
+        // socket.broadcast.emit('hi');
     });
+});
 
-    // ws.send('something');
-
-    // console.log('Connecting Request ', req);
-    clients.push(ws);
-    console.log('Total Connecting: ', clients.length);
+http.listen(port, function(){
+    console.log(`Server started, listening on *:${port}`);
 });

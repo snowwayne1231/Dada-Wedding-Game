@@ -12,6 +12,10 @@ export default [
     component: PuzzlePage,
   },
   {
+    path: '/puzzle/2/',
+    component: PuzzlePage,
+  },
+  {
     path: '/bingo/',
     component: BingoPage,
   },
