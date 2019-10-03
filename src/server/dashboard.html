@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+    <head>
+        <title>結果呈現</title>
+        <style>
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body { font: 24px Helvetica, Arial; }
+            input { width: 340px; height: 50px; line-height: 46px; text-align: center; font-size: 24px; }
+            table {
+                text-align: center;
+            }
+            button {
+                display: block;
+                width: 160px;
+                height: 50px;
+                font-size: 24px;
+                margin: 4px auto;
+            }
+
+        </style>
+        <script src="/socket.io/socket.io.js"></script>
+    </head>
+<body>
+    <div id="meta">
+        <table id="">
+            <thead>
+                <tr>
+                    <th>題目名稱</th>
+                    <th>作答數</th>
+                </tr>
+            </thead>
+            <tbody id="question_list">
+
+            </tbody>
+        </table>
+    </div>
+    <script>
+        //var pwd = window.prompt('請輸入密碼?');
+        //if (pwd != '1231') { document.body.innerHTML = ''; }
+    </script>
+    <script>
+        window.globalData = {};
+
+        var socket = io();
+        socket.on('connect', () => {
+            emit({ type: 'get_admin' });
+        });
+
+        socket.on('message', (msg) => {
+            console.log(msg);
+            switch (msg.type) {
+                case 'get_admin':
+                    var data = window.globalData = msg.payload;
+
+                break;
+                case 'error': return window.alert(msg.msg);
+                default:
+            }
+        });
+
+        function emit(data) {
+            return socket.emit('message', JSON.stringify(data));
+        }
+    </script>
+</body>
+</html>

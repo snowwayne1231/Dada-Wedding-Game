@@ -11,8 +11,10 @@ const store = new Vuex.Store({
         name: null,
         questions: [],
         answers: [],
-        showing_question: 0,
-        bingoMap: [],
+        opening: {
+            session: -1,
+            question: -1,
+        },
     },
     getters: {
 
@@ -23,11 +25,19 @@ const store = new Vuex.Store({
                 type: 'get_questions',
             });
         },
+        GET_OPENING() {
+            WS.send({
+                type: 'get_opening',
+            });
+        },
         SET_NAME({state, dispatch}) {
             if (state.name && state.name.length >= 2) {
                 return;
             }
-            const name = window.prompt('請輸入您的大名', '');
+            const name = (location.host == 'localhost')
+                ? '1234'
+                : window.prompt('請輸入您的大名', '');
+
             if (!name || name.length < 2) {
                 window.alert('請輸入兩個字以上');
                 dispatch('SET_NAME');
@@ -37,6 +47,12 @@ const store = new Vuex.Store({
                     name,
                 });
             }
+        },
+        ANSWERING({state}, answer) {
+            WS.send({
+                type: 'answering',
+                answer,
+            });
         },
     },
     mutations: {
@@ -51,6 +67,14 @@ const store = new Vuex.Store({
                     state.questions = response.payload;
                     console.log('questions', state.questions);
                 break;
+                case 'get_opening':
+                    state.opening = response.payload;
+                    console.log('opening', state.opening);
+                break;
+                case 'answering':
+                    state.answers = response.payload;
+                break;
+                default:
             }
         }
     },

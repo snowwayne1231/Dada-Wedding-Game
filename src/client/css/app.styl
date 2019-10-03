@@ -2,6 +2,59 @@
     .animation {
 
     }
+
+    .answered {
+
+        .button-outline {
+            color: #ff0000;
+            outline-color: #ff0000;
+            border-color: #ff0000;
+        }
+
+        &.isright {
+            .button-outline {
+                color: #00ff00;
+                outline-color: #00ff00;
+                border-color: #00ff00;
+            }
+
+            .option.answer {
+                background-color: #00ff00;
+            }
+        }
+    }
+
+    .option {
+        transition: background-color 0.3s ease 0s;
+        background-color: #fff;
+
+        &.picking {
+            color: #fff;
+            background-color: #0077ff;
+        }
+
+        &.answer {
+            color: #fff;
+            background-color: #ff0000;
+        }
+    }
+
+    .button-outline {
+        font-size: 22px;
+        height: 66px;
+        line-height: 64px;
+        transition: opacity 0.3s ease;
+        opacity: 1;
+
+        &.active-state {
+            color: #fff;
+            background-color:#0077ff;
+        }
+
+        &.hide {
+            opacity: 0;
+        }
+    }
 }
 
 #bingo {

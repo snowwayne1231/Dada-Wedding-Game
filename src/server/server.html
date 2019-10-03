@@ -1,0 +1,196 @@
+<!doctype html>
+<html>
+    <head>
+        <title>YODA後台</title>
+        <style>
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body { font: 24px Helvetica, Arial; }
+            input { width: 340px; height: 50px; line-height: 46px; text-align: center; font-size: 24px; }
+            table {
+                text-align: center;
+
+            }
+            button {
+                display: block;
+                width: 160px;
+                height: 50px;
+                font-size: 24px;
+                margin: 4px auto;
+            }
+            #meta {
+
+            }
+
+            #question_list {
+                text-align: left;
+            }
+
+        </style>
+        <script src="/socket.io/socket.io.js"></script>
+    </head>
+<body>
+    <div id="meta">
+        <table>
+            <thead>
+                <tr>
+                    <th>場次</th>
+                    <th>題目</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><button onclick="onClickButton(1)">上一場</button></td>
+                    <td><button onclick="onClickButton(2)">上一題</button></td>
+                </tr>
+                <tr>
+                    <td><input type="number" id="session" /></td>
+                    <td><input type="number" id="question" /></td>
+                </tr>
+
+                <tr>
+                    <td><button onclick="onClickButton(3)">下一場</button></td>
+                    <td><button onclick="onClickButton(4)">下一題</button></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <button onclick="onClickActivate()">作答此題</button>
+                        <button onclick="onClickClose()">關閉作答</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table id="">
+            <thead>
+                <tr>
+                    <th>題目名稱</th>
+                    <th>作答數</th>
+                </tr>
+            </thead>
+            <tbody id="question_list">
+
+            </tbody>
+        </table>
+    </div>
+    <script>
+        //var pwd = window.prompt('請輸入密碼?');
+        //if (pwd != '1231') { document.body.innerHTML = ''; }
+    </script>
+    <script>
+        window.globalData = {};
+        var input_session = document.getElementById('session');
+        var input_question = document.getElementById('question');
+        var question_list = document.getElementById('question_list');
+
+        var socket = io();
+        socket.on('connect', () => {
+            emit({ type: 'get_admin' });
+
+        });
+
+        socket.on('message', (msg) => {
+            console.log(msg);
+            switch (msg.type) {
+                case 'get_admin':
+                    var data = window.globalData = msg.payload;
+                    input_session.value = data.opening.session;
+                    input_question.value = data.opening.question;
+
+                    question_list.innerHTML = '';
+
+                    var ans_nums = data.questions.map(q => new Array(q.length).fill(0));
+                    Object.values(data.map).map(val => {
+                        var ans = val.answers;
+                        ans.map((a, idx) => a.map((aobj, iidx) => {
+                            if (aobj.a >= 0) { ans_nums[idx][iidx]+=1; }
+                        }));
+                    });
+
+                    //console.log('ans_nums', ans_nums);
+
+                    data.questions.map((sess, si) => {
+                        return sess.map((q, idx) => {
+                            var tr = document.createElement('tr');
+                            var td1 = document.createElement('td');
+                            td1.innerText = `${si}-${idx} : ${q.headline}`;
+                            var td2 = document.createElement('td');
+
+                            td2.innerText = ans_nums[si][idx];
+
+                            tr.appendChild(td1);
+                            tr.appendChild(td2);
+                            question_list.appendChild(tr);
+                        });
+                    });
+                break;
+                case 'error': return window.alert(msg.msg);
+                default:
+            }
+        });
+
+        function emit(data) {
+            return socket.emit('message', JSON.stringify(data));
+        }
+
+
+        function onClickButton(numb) {
+            switch (numb) {
+                case 1: input_session.value = parseInt(input_session.value) -1; break;
+                case 2: input_question.value = parseInt(input_question.value) -1; break;
+                case 3: input_session.value = parseInt(input_session.value) +1; break;
+                case 4: input_question.value = parseInt(input_question.value) +1; break;
+                default:
+            }
+        }
+
+        function onClickActivate() {
+            var sess = parseInt(input_session.value, 10);
+            var qt = parseInt(input_question.value, 10);
+
+            emit({
+                type: 'change_opening',
+                session: sess,
+                question: qt,
+            });
+
+            timeoutGet();
+        }
+
+        function onClickClose() {
+            emit({
+                type: 'change_opening',
+                session: 0,
+                question: -1,
+            });
+
+            setIntervalOut();
+        }
+
+        function timeoutGet() {
+            if (window.__timer) {
+                window.clearTimeout(window.__timer);
+            }
+            setIntervalOut();
+            window.__timer = window.setTimeout(() => {
+                emit({ type: 'get_admin' });
+                setIntervalIn();
+                window.__timer = null;
+            },3000);
+        }
+
+        function setIntervalIn() {
+            window._interval_timer = window.setInterval(() => {
+                emit({ type: 'get_admin' });
+            }, 7500);
+        }
+
+        function setIntervalOut() {
+            if (window._interval_timer) {
+                window.clearInterval(window._interval_timer);
+                window._interval_timer = null;
+            }
+        }
+
+
+    </script>
+</body>
+</html>
