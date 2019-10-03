@@ -63,7 +63,7 @@ function onmessage(ws, clients, msg) {
             opening.session = nextSession;
             opening.question = nextQuestion;
 
-            console.log('change_opening', opening);
+            // console.log('change_opening', opening);
 
             broadcast({
                 type: 'get_opening',
@@ -78,6 +78,7 @@ function onmessage(ws, clients, msg) {
             if (isDoubleNaming) {
                 if (data.address == address) {
                     // is self
+                    ws.name = name;
                     emit(data);
                 } else {
                     emit({error: '名稱與他人重復, 請重新輸入其他名稱', dispatch: 'SET_NAME'});
@@ -150,7 +151,13 @@ function onmessage(ws, clients, msg) {
 }
 
 
+function getMap() {
+    return nameMapData;
+}
+
+
 
 module.exports = {
     onmessage,
+    getMap,
 }

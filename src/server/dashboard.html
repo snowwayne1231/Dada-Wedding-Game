@@ -9,6 +9,13 @@
             table {
                 text-align: center;
             }
+
+            table th {
+                width: 240px;
+            }
+            #question_list tr:nth-child(odd) {
+                background-color: #dedede;
+            }
             button {
                 display: block;
                 width: 160px;
@@ -25,8 +32,9 @@
         <table id="">
             <thead>
                 <tr>
-                    <th>題目名稱</th>
-                    <th>作答數</th>
+                    <th>賓客名稱</th>
+                    <th>答對數</th>
+                    <th>總費時</th>
                 </tr>
             </thead>
             <tbody id="question_list">
@@ -34,24 +42,114 @@
             </tbody>
         </table>
     </div>
-    <script>
-        //var pwd = window.prompt('請輸入密碼?');
-        //if (pwd != '1231') { document.body.innerHTML = ''; }
-    </script>
+
     <script>
         window.globalData = {};
+        var dom_questions_list = document.getElementById('question_list');
+        var dom_tds = [];
+
+        var map_players = {};
+        var ary_players = [];
 
         var socket = io();
         socket.on('connect', () => {
-            emit({ type: 'get_admin' });
+            emit({ type: 'subscribe' });
+            emit({ type: 'get_questions' });
         });
 
         socket.on('message', (msg) => {
             console.log(msg);
             switch (msg.type) {
-                case 'get_admin':
-                    var data = window.globalData = msg.payload;
+                case 'subscribe':
+                    var data = msg.payload;
+                    var answers = window.globalData.answers;
+                    if (answers) {
 
+                        map_players = {};
+                        var playerNames = Object.keys(data);
+                        if (!(window.globalData.playerNames && window.globalData.playerNames.length == playerNames.length)) {
+
+                            window.globalData.playerNames = playerNames;
+                            dom_questions_list.innerHTML = '';
+                            dom_tds = [];
+                            playerNames.map(name => {
+                                var loc = data[name];
+                                var rights = 0;
+                                var rights_time = 0;
+                                var total_time = 0;
+                                loc.answers.map((sess, sidx) => {
+                                    sess.map((qt, qidx) => {
+                                        if (answers[sidx] && answers[sidx][qidx] && answers[sidx][qidx] == qt.a) {
+                                            rights += 1;
+                                            rights_time += qt.t;
+                                        }
+                                        total_time += qt.t;
+                                    });
+                                });
+                                var tr = document.createElement('tr');
+                                var td_1 = document.createElement('td');
+                                var td_2 = document.createElement('td');
+                                var td_3 = document.createElement('td');
+                                tr.appendChild(td_1);
+                                tr.appendChild(td_2);
+                                tr.appendChild(td_3);
+                                dom_tds.push([td_1, td_2, td_3]);
+                                dom_questions_list.appendChild(tr);
+                                map_players[name] = [name, rights, rights_time, total_time];
+                            });
+                            
+                        } else {
+
+                            playerNames.map(name => {
+                                var loc = data[name];
+                                var rights = 0;
+                                var rights_time = 0;
+                                var total_time = 0;
+                                loc.answers.map((sess, sidx) => {
+                                    sess.map((qt, qidx) => {
+                                        if (answers[sidx] && answers[sidx][qidx] && answers[sidx][qidx] == qt.a) {
+                                            rights += 1;
+                                            rights_time += qt.t;
+                                        }
+                                        total_time += qt.t;
+                                    });
+                                });
+                                map_players[name] = [name, rights, rights_time, total_time];
+                            });
+
+                        }
+
+                        ary_players = Object.values(map_players);
+                        ary_players.sort((a,b) => {
+                            return b[1] == a[1]
+                                ? b[2] - a[2]
+                                : b[1] - a[1];
+                        });
+
+                        // console.log('ary_players', ary_players);
+
+                        ary_players.map((player, idx) => {
+                            var name = player[0];
+                            var rights = player[1];
+                            var rights_time = player[2];
+                            dom_tds[idx][0].innerText = name;
+                            dom_tds[idx][1].innerText = `${rights} 題`;
+                            dom_tds[idx][2].innerText = `${rights_time / 1000} 秒`;
+                        });
+                        
+                    }
+                break;
+                case 'get_questions':
+                    var questions = msg.payload;
+                    // dom_questions_list.innerHTML = '';
+                    var answers = questions.map((sess, sidx) => {
+                        return sess.map((question, qidx) => {
+                            return question.answer;
+                        });
+                    });
+
+                    window.globalData.questions = questions;
+                    window.globalData.answers = answers;
                 break;
                 case 'error': return window.alert(msg.msg);
                 default:
