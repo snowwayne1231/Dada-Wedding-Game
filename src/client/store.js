@@ -1,14 +1,16 @@
-import axios from 'axios';
+// import axios from 'axios';
 import Vue from 'vue';
 import Vuex from 'vuex';
 
 Vue.use(Vuex);
-const locate = 'ws://localhost:8080/';
+// const locate = 'ws://localhost:8080/';
 const WS = newWsConnect();
 
 const store = new Vuex.Store({
     state: {
         name: null,
+        table: -1,
+        say: '',
         questions: [],
         answers: [],
         opening: {
@@ -30,23 +32,17 @@ const store = new Vuex.Store({
                 type: 'get_opening',
             });
         },
-        SET_NAME({state, dispatch}) {
-            if (state.name && state.name.length >= 2) {
-                return;
-            }
-            const name = (location.host == 'localhost')
-                ? '1234'
-                : window.prompt('請輸入您的大名', '');
+        SET_NAME({state, dispatch}, {name, table, say}) {
+            // if (state.name && state.name.length >= 1) {
+            //     return;
+            // }
 
-            if (!name || name.length < 2) {
-                window.alert('請輸入兩個字以上');
-                dispatch('SET_NAME');
-            } else {
-                WS.send({
-                    type: 'name',
-                    name,
-                });
-            }
+            WS.send({
+                type: 'name',
+                name,
+                table,
+                say,
+            });
         },
         ANSWERING({state}, answer) {
             WS.send({
@@ -57,19 +53,21 @@ const store = new Vuex.Store({
     },
     mutations: {
         'UPDATE:TYPE': (state, response) => {
-            console.log('UPDATE:TYPE', response);
+            // console.log('UPDATE:TYPE', response);
             switch (response.type) {
                 case 'name':
                     state.name = response.payload.name;
                     state.answers = response.payload.answers;
+                    state.table = response.payload.table;
+                    state.say = response.payload.say;
                 break;
                 case 'get_questions':
                     state.questions = response.payload;
-                    console.log('questions', state.questions);
+                    // console.log('questions', state.questions);
                 break;
                 case 'get_opening':
                     state.opening = response.payload;
-                    console.log('opening', state.opening);
+                    // console.log('opening', state.opening);
                 break;
                 case 'answering':
                     state.answers = response.payload;
@@ -79,9 +77,6 @@ const store = new Vuex.Store({
         }
     },
 });
-
-
-
 
 
 function newWsConnect(locate) {
@@ -120,8 +115,6 @@ function newWsConnect(locate) {
     function wsSend(obj) {
 
         if (_isWsOpening) {
-            console.log('wsSend', ws, obj, ws.connected);
-            console.log('_isWsOpening', _isWsOpening);
             ws.emit('message', JSON.stringify(obj));
         } else {
             _wsSendingQueue.push(obj);

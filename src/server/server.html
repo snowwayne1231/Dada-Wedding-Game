@@ -59,6 +59,7 @@
                 </tr>
             </tbody>
         </table>
+        <div><input id="clock" type="text" /></div>
         <table id="">
             <thead>
                 <tr>
@@ -73,13 +74,17 @@
     </div>
     <script>
         //var pwd = window.prompt('請輸入密碼?');
-        //if (pwd != '1231') { document.body.innerHTML = ''; }
+        //if (pwd != 'yoda') { document.body.innerHTML = ''; location.href = '/'; }
     </script>
     <script>
+        const maxMsecond = 8000;
         window.globalData = {};
+
         var input_session = document.getElementById('session');
         var input_question = document.getElementById('question');
+        var input_clock = document.getElementById('clock');
         var question_list = document.getElementById('question_list');
+        var isFirstLoad = true;
 
         var socket = io();
         socket.on('connect', () => {
@@ -92,8 +97,12 @@
             switch (msg.type) {
                 case 'get_admin':
                     var data = window.globalData = msg.payload;
-                    input_session.value = data.opening.session;
-                    input_question.value = data.opening.question;
+                    if (isFirstLoad) {
+                        input_session.value = data.opening.session;
+                        input_question.value = data.opening.question;
+                        isFirstLoad = false;
+                    }
+
 
                     question_list.innerHTML = '';
 
@@ -118,6 +127,11 @@
 
                             tr.appendChild(td1);
                             tr.appendChild(td2);
+
+                            if (si == data.opening.session && idx == data.opening.question) {
+                                tr.style.color = 'red';
+                            }
+
                             question_list.appendChild(tr);
                         });
                     });
@@ -153,6 +167,16 @@
             });
 
             timeoutGet();
+
+            //window._close_timer = window.setTimeout(onClickClose, maxMsecond);
+            window._clock_st = new Date().getTime();
+            if (!window._interval_clock_timer && qt >= 0) {
+                window._interval_clock_timer = window.setInterval(() => {
+                    var second = Math.min(new Date().getTime() - window._clock_st, maxMsecond) / 1000;
+                    input_clock.value = second.toFixed(2);
+                }, 200);
+            }
+
         }
 
         function onClickClose() {
@@ -162,25 +186,31 @@
                 question: -1,
             });
 
-            setIntervalOut();
+            timeoutGet(true);
+
+            if (window._interval_clock_timer) {
+                window.clearInterval(window._interval_clock_timer);
+                window._interval_clock_timer = null;
+                input_clock.value = '0.00';
+            }
         }
 
-        function timeoutGet() {
+        function timeoutGet(isFinal) {
             if (window.__timer) {
                 window.clearTimeout(window.__timer);
             }
             setIntervalOut();
             window.__timer = window.setTimeout(() => {
                 emit({ type: 'get_admin' });
-                setIntervalIn();
+                !isFinal && setIntervalIn();
                 window.__timer = null;
-            },3000);
+            },500);
         }
 
         function setIntervalIn() {
             window._interval_timer = window.setInterval(() => {
                 emit({ type: 'get_admin' });
-            }, 7500);
+            }, 5000);
         }
 
         function setIntervalOut() {

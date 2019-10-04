@@ -1,5 +1,5 @@
 
-const {onmessage, getMap} = require('./ws/onmessage');
+const {onmessage, getData} = require('./ws/onmessage');
 const {onclose} = require('./ws/onclose');
 
 const express = require('express');
@@ -59,7 +59,7 @@ io.on('connection', function(socket){
         if (comingJSON.type === 'subscribe') {
             socket.emit('message', {
                 type: 'subscribe',
-                payload: getMap(),
+                payload: getData(),
             });
             subscribers.push(socket);
         }
@@ -76,7 +76,7 @@ setInterval(()=> {
     subscribers.map(socket => {
         socket.emit('message', {
             type: 'subscribe',
-            payload: getMap(),
+            payload: getData(),
         });
     });
-}, 5000);
+}, 3000);

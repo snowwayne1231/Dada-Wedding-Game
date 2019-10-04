@@ -1,16 +1,19 @@
 <template>
   <f7-page id="puzzle">
     <f7-navbar :title="sessionTitle" back-link="返回"></f7-navbar>
-    <div v-if="canShow" :class="{animation: true, answered: answered, isright: isRight}">
+    <div v-if="canShow" class="animation" :class="{answered: answered, isright: isRight}">
         <!-- <div><input id="puzzle-interval-timer" type="text" readonly /><div> -->
-        <f7-block-title>第 {{nowRound}} 題: <br/>{{question.headline}}</f7-block-title>
-        <f7-list>
-            <f7-list-item v-for="(opt, idx) in options" :key="idx" :title="opt" @click="onClickOption(idx)" class="option" :class="{picking: pickingOption == idx, answer: answer == idx}"></f7-list-item>
+        <f7-block-title class="headline">第 {{nowRound}} 題: <br/>{{question.headline}}</f7-block-title>
+        <f7-list :class="{hasimg: hasOptionImage}">
+            <f7-list-item v-for="(opt, idx) in options" :key="idx" :title="opt" @click="onClickOption(idx)" class="option" :class="{picking: pickingOption == idx, answer: answer == idx}">
+                <img v-if="hasOptionImage" :src="optionImages[idx]" class="option-image" />
+            </f7-list-item>
         </f7-list>
+        <f7-block-title v-if="answered">停止作答!</f7-block-title>
         <f7-button :class="{hide: answered}" :outline="true" @click="onClickAnswering"><span>確定答案</span></f7-button>
-        <f7-block-title v-if="answered">{{spendTime}}秒</f7-block-title>
+        <div v-if="!answered" class="loading-bar"><div id="loading-bar-inner" class="bar"></div></div>
     </div>
-    <div v-else>
+    <div v-else class="animation">
         <f7-block-title> 猜謎目前關閉中, 請等待大會開啟 </f7-block-title>
     </div>
 
@@ -21,7 +24,7 @@ import { mapState } from 'vuex';
 export default {
     data() {
         return {
-            timeSpendMs: 0,
+            maxMSecond: 8000,
             pickingOption: -1,
             answer: -1,
         };
@@ -32,7 +35,7 @@ export default {
             return self.$f7route.path.match(/puzzle.2./g) ? 1 : 0;
         },
         sessionTitle(self) {
-            return self.session == 0 ? '猜謎[首場]' : '猜謎[中場]';
+            return self.session == 0 ? '主持人示範' : 'YODA猜謎';
         },
         thisQuestions(self) {
             return self.questions[self.session] || [];
@@ -43,14 +46,21 @@ export default {
         options(self) {
             return self.question.options || [];
         },
+        optionImages(self) {
+            return self.question.options_img || [];
+        },
+        hasOptionImage(self) {
+            return self.optionImages.length > 0;
+        },
         canShow(self) {
             return self.opening.session == self.session && self.options.length > 0;
         },
         nowRound(self) {
-            if (this._tmp_question != self.opening.question) {
-                this.answer = -1;
+            if (self._tmp_question != self.opening.question) {
+                self.answer = -1;
+                self._delay_timer = window.setTimeout(self.doWhenTimeEnd, self.maxMSecond);
             }
-            this._tmp_question = self.opening.question;
+            self._tmp_question = self.opening.question;
             return self.opening.question + 1;
         },
         answered(self) {
@@ -66,11 +76,13 @@ export default {
         },
     },
     mounted() {
+        if (!this.name) {
+            window.alert('未登錄個人資料');
+            location.href = '/';
+            return;
+        }
         console.log('puzzle', this);
         this.$store.dispatch('GET_OPENING');
-        if (!this.name) {
-            this.$store.dispatch('SET_NAME');
-        }
         // this.startInterval();
     },
     methods: {
@@ -99,10 +111,15 @@ export default {
             this.pickingOption = -1;
 
             this.$store.dispatch('ANSWERING', this.answer);
+            if (this._delay_timer) {
+                window.clearTimeout(this._delay_timer);
+            }
         },
-    },
-    beforeDestroy() {
-        if (this._timer) { window.clearInterval(this._timer); }
+        doWhenTimeEnd() {
+            this.answer = 9;
+            this.pickingOption = -1;
+            this._delay_timer = null;
+        },
     },
 }
 </script>

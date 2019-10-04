@@ -1,17 +1,21 @@
 [
     [
-        {"headline": "什麼是dada的弱點?", "options": ["自負", "聰明", "懶惰", "善良"], "answer": 3},
-        {"headline": "yoyo喜歡看的電影種類?", "options": ["無腦動作片", "感人動畫片", "浪漫愛情片", "恐怖片"], "answer": 0},
-        {"headline": "哪一句不是yoyo的口頭禪?", "options": ["我在跟你說認真的", "吵屁阿", "最好是這樣", "你是有什麼障礙"], "answer": 0},
-        {"headline": "哪個不是dada的興趣?", "options": ["滑雪", "賭博", "桌游", "按摩"], "answer": 3},
-        {"headline": "dada喜歡看的電影種類?", "options": ["日本愛情動作片", "Marvel英雄片", "懸疑劇情片", "勵志紀錄片"], "answer": 2}
+        {"headline": "Dada的弱點是什麼?", "options": ["自負", "白目", "懶惰", "善良"], "answer": 3},
+        {"headline": "哪組貼圖是新人最愛用的?", "options": ["白白日記", "臭跩貓", "寶寶不說", "熊大＆兔兔"], "answer": 1},
+        {"headline": "哪一隻是Dada現在養的狗?", "options": ["豆豆", "阿旺", "瑪莎", "妹妹"], "options_img": ["https://ichef.bbci.co.uk/news/624/cpsprodpb/EC63/production/_104451506_kiwivictoire.jpg", "https://ichef.bbci.co.uk/news/624/cpsprodpb/EC63/production/_104451506_kiwivictoire.jpg", "https://ichef.bbci.co.uk/news/624/cpsprodpb/EC63/production/_104451506_kiwivictoire.jpg", "https://ichef.bbci.co.uk/news/624/cpsprodpb/EC63/production/_104451506_kiwivictoire.jpg"], "answer": 2},
+        {"headline": "Yoyo的婚戒刻著\"永遠の愛と幸福 Yo&Da ♥ 2019\"，請問Dada的婚戒刻什麼?", "options": ["永遠の幸福と愛 Da&Yo ♥ 2019 ", "no permanent friends, nor permanent enemies,nothing permanent", "力があなたと共にあるように Yo & Da  2019", "Eternal love and happiness Yo & Da  2019"], "answer": 2}
     ],
     [
-        {"headline": "什麼是dada的弱點?", "options": ["自負", "聰明", "懶惰", "善良"], "answer": 3},
-        {"headline": "yoyo喜歡看的電影種類?", "options": ["無腦動作片", "感人動畫片", "浪漫愛情片", "恐怖片"], "answer": 0},
-        {"headline": "哪一句不是yoyo的口頭禪?", "options": ["我在跟你說認真的", "吵屁阿", "最好是這樣", "你是有什麼障礙"], "answer": 0},
-        {"headline": "哪個不是dada的興趣?", "options": ["滑雪", "賭博", "桌游", "按摩"], "answer": 3},
-        {"headline": "dada喜歡看的電影種類?", "options": ["日本愛情動作片", "Marvel英雄片", "懸疑劇情片", "勵志紀錄片"], "answer": 2}
+        {"headline": "Dada的弱點是什麼?", "options": ["自負", "白目", "懶惰", "善良"], "answer": 3},
+        {"headline": "Yoyo喜歡看哪種類型的電影?", "options": ["犯罪動作片", "感人愛情片", "好笑喜劇片", "驚悚恐怖片"], "answer": 0},
+        {"headline": "Dada喜歡看哪種類型的電影?", "options": ["日本愛情動作片", "Marvel英雄片", "懸疑劇情片", "勵志紀錄片"], "answer": 2},
+        {"headline": "哪一句是Yoyo的口頭禪?", "options": ["現在再跟你說認真的", "吵屁吵", "最好是這個樣子啦", "到底是有什麼障礙"], "answer": 3},
+        {"headline": "哪一個不是Dada的興趣?", "options": ["滑雪", "賭博", "桌遊", "打羽球"], "answer": 3},
+        {"headline": "哪一個是Yoyo現在喜愛的卡通人物?", "options": ["海綿寶寶", "小小兵", "粉紅屁桃", "蠟筆小新"], "answer": 1},
+        {"headline": "哪一個是新人最常約會的地方?", "options": ["夜市", "電影院", "河濱公園", "Motel"], "answer": 0},
+        {"headline": "哪一隻是Dada現在養的狗?", "options": ["豆豆", "阿旺", "瑪莎", "妹妹"], "options_img": ["https://ichef.bbci.co.uk/news/624/cpsprodpb/EC63/production/_104451506_kiwivictoire.jpg", "https://ichef.bbci.co.uk/news/624/cpsprodpb/EC63/production/_104451506_kiwivictoire.jpg", "https://ichef.bbci.co.uk/news/624/cpsprodpb/EC63/production/_104451506_kiwivictoire.jpg", "https://ichef.bbci.co.uk/news/624/cpsprodpb/EC63/production/_104451506_kiwivictoire.jpg"], "answer": 2},
+        {"headline": "哪一種是新人都愛吃的食物?", "options": ["日本料理", "西式牛排", "台式滷味", "義大利麵"], "answer": 3},
+        {"headline": "哪組貼圖是新人最愛用的?", "options": ["白白日記", "臭跩貓", "寶寶不說", "熊大＆兔兔"], "answer": 1},
+        {"headline": "Yoyo的婚戒刻著\"永遠の愛と幸福 Yo&Da ♥ 2019\"，請問Dada的婚戒刻什麼?", "options": ["永遠の幸福と愛 Da&Yo ♥ 2019 ", "no permanent friends, nor permanent enemies,nothing permanent", "力があなたと共にあるように Yo & Da  2019", "Eternal love and happiness Yo & Da  2019"], "answer": 2}
     ]
 ]
-

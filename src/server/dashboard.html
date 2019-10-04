@@ -4,18 +4,25 @@
         <title>結果呈現</title>
         <style>
             * { margin: 0; padding: 0; box-sizing: border-box; }
-            body { font: 24px Helvetica, Arial; }
+            body { font: 24px Helvetica, Arial; background-color: #fff2f4; position: relative; height: 100vh; }
             input { width: 340px; height: 50px; line-height: 46px; text-align: center; font-size: 24px; }
             table {
                 text-align: center;
+                margin: 0px auto;
             }
 
-            table th {
-                width: 240px;
+            #meta table thead tr {
+                color: #ff006a;
             }
+
+            #meta table th {
+                width: 226px;
+            }
+
             #question_list tr:nth-child(odd) {
-                background-color: #dedede;
+                background-color: #ffd3f0;
             }
+
             button {
                 display: block;
                 width: 160px;
@@ -24,15 +31,42 @@
                 margin: 4px auto;
             }
 
+            #change-btn {
+                position: absolute;
+                left: 2px;
+                top: 2px;
+                width: 48px;
+                height: 24px;
+                font-size: 13px;
+            }
+
+            #meta {
+                height: 50%;
+                overflow-y: auto;
+            }
+
+            #now-question {
+                height: 50%;
+            }
+
+            #now-question table {
+                width: 100%;
+                height: 400px;
+            }
+
         </style>
         <script src="/socket.io/socket.io.js"></script>
     </head>
 <body>
+    <button id="change-btn" onclick="onClickChangeBtn(this)">0</button>
     <div id="meta">
         <table id="">
             <thead>
                 <tr>
+                    <th>排名</th>
+                    <th>賓客桌次</th>
                     <th>賓客名稱</th>
+                    <th>想對新人說的話</th>
                     <th>答對數</th>
                     <th>總費時</th>
                 </tr>
@@ -42,10 +76,31 @@
             </tbody>
         </table>
     </div>
+    <div id="now-question">
+        <table>
+            <thead>
+                <tr>
+                    <th colspan="2" id="th-headline">headline</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>2</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>4</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
     <script>
-        window.globalData = {};
+        window.globalData = {session: 0};
+        const maxMsecond = 8000;
         var dom_questions_list = document.getElementById('question_list');
+        var dom_now_question = document.getElementById('now-question');
         var dom_tds = [];
 
         var map_players = {};
@@ -61,82 +116,80 @@
             console.log(msg);
             switch (msg.type) {
                 case 'subscribe':
-                    var data = msg.payload;
+                    var dataMap = msg.payload.map;
                     var answers = window.globalData.answers;
                     if (answers) {
 
                         map_players = {};
-                        var playerNames = Object.keys(data);
+                        var playerNames = Object.keys(dataMap);
                         if (!(window.globalData.playerNames && window.globalData.playerNames.length == playerNames.length)) {
 
                             window.globalData.playerNames = playerNames;
                             dom_questions_list.innerHTML = '';
                             dom_tds = [];
-                            playerNames.map(name => {
-                                var loc = data[name];
-                                var rights = 0;
-                                var rights_time = 0;
-                                var total_time = 0;
-                                loc.answers.map((sess, sidx) => {
-                                    sess.map((qt, qidx) => {
-                                        if (answers[sidx] && answers[sidx][qidx] && answers[sidx][qidx] == qt.a) {
-                                            rights += 1;
-                                            rights_time += qt.t;
-                                        }
-                                        total_time += qt.t;
-                                    });
-                                });
+                            playerNames.map((name, idx) => {
+                                var loc = dataMap[name];
+                                var ary = parseDataToArray(loc, answers);
                                 var tr = document.createElement('tr');
+                                var td_0 = document.createElement('td');
                                 var td_1 = document.createElement('td');
                                 var td_2 = document.createElement('td');
                                 var td_3 = document.createElement('td');
+                                var td_4 = document.createElement('td');
+                                var td_5 = document.createElement('td');
+                                td_0.innerText = idx + 1;
+                                tr.appendChild(td_0);
                                 tr.appendChild(td_1);
                                 tr.appendChild(td_2);
                                 tr.appendChild(td_3);
-                                dom_tds.push([td_1, td_2, td_3]);
+                                tr.appendChild(td_4);
+                                tr.appendChild(td_5);
+                                dom_tds.push([td_1, td_2, td_3, td_4, td_5]);
                                 dom_questions_list.appendChild(tr);
-                                map_players[name] = [name, rights, rights_time, total_time];
+                                map_players[name] = ary;
                             });
-                            
+
                         } else {
 
                             playerNames.map(name => {
-                                var loc = data[name];
-                                var rights = 0;
-                                var rights_time = 0;
-                                var total_time = 0;
-                                loc.answers.map((sess, sidx) => {
-                                    sess.map((qt, qidx) => {
-                                        if (answers[sidx] && answers[sidx][qidx] && answers[sidx][qidx] == qt.a) {
-                                            rights += 1;
-                                            rights_time += qt.t;
-                                        }
-                                        total_time += qt.t;
-                                    });
-                                });
-                                map_players[name] = [name, rights, rights_time, total_time];
+                                var loc = dataMap[name];
+                                var ary = parseDataToArray(loc, answers);
+                                map_players[name] = ary;
                             });
 
                         }
 
                         ary_players = Object.values(map_players);
                         ary_players.sort((a,b) => {
-                            return b[1] == a[1]
-                                ? b[2] - a[2]
-                                : b[1] - a[1];
+                            return a[4] == b[4]
+                                ? a[5] - b[5]
+                                : a[4] - b[4];
                         });
 
                         // console.log('ary_players', ary_players);
 
                         ary_players.map((player, idx) => {
-                            var name = player[0];
-                            var rights = player[1];
-                            var rights_time = player[2];
-                            dom_tds[idx][0].innerText = name;
-                            dom_tds[idx][1].innerText = `${rights} 題`;
-                            dom_tds[idx][2].innerText = `${rights_time / 1000} 秒`;
+                            var table = player[0];
+                            var name = player[1];
+                            var say = player[2];
+                            var rights = player[3];
+                            var rights_time = player[4];
+                            var total_time = player[5];
+                            dom_tds[idx][0].innerText = `${table} 桌`;
+                            dom_tds[idx][1].innerText = `${name}`;
+                            dom_tds[idx][2].innerText = say;
+                            dom_tds[idx][3].innerText = `${rights} 題`;
+                            dom_tds[idx][4].innerText = `${rights_time / 1000} 秒`;
                         });
-                        
+
+                        var session = window.globalData.session;
+                        var opening = msg.payload.opening;
+                        var qidx = opening.question;
+                        var thisQuestion = window.globalData.questions[session][qidx];
+
+                        if (thisQuestion) {
+                            appendToNowQuestion(thisQuestion, qidx);
+                        }
                     }
                 break;
                 case 'get_questions':
@@ -158,6 +211,43 @@
 
         function emit(data) {
             return socket.emit('message', JSON.stringify(data));
+        }
+
+        function parseDataToArray(loc, answers) {
+            var rights = 0;
+            var rights_time = 0;
+            var total_time = 0;
+            loc.answers.map((sess, sidx) => {
+                if (sidx != window.globalData.session) {return;} // 示範題
+                sess.map((qt, qidx) => {
+                    if (answers[sidx] && !isNaN(answers[sidx][qidx]) && answers[sidx][qidx] == qt.a) {
+                        rights += 1;
+                        rights_time += Math.min(qt.t, maxMsecond);
+                    } else {
+                        rights_time += maxMsecond;
+                    }
+                    total_time += qt.t;
+                });
+            });
+            return [loc.table, loc.name, loc.say, rights, rights_time, total_time];
+        }
+
+        function onClickChangeBtn(ele) {
+            var sess = parseInt(window.prompt('請輸入代號'), 10);
+            window.globalData.session = sess;
+            ele.innerText = sess;
+        }
+
+
+        function appendToNowQuestion(question, qidx) {
+            var headline = question.headline;
+            var options = question.options;
+            if (window._tmp_qidx != qidx) {
+
+                window._tmp_qidx = qidx;
+            }
+
+
         }
     </script>
 </body>

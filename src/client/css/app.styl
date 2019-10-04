@@ -1,6 +1,30 @@
-#puzzle {
-    .animation {
+@keyframes loading_bar{
+    from{
+        width: 100%;
+    }
+    to{
+        width: 0%;
+    }
+}
 
+@keyframes fade_in{
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+#puzzle {
+    .headline { white-space: normal; }
+    .animation {
+        opacity: 0;
+        animation-name: fade_in;
+        animation-duration: 0.5s;
+        animation-iteration-count: 1;
+        animation-timing-function: linear;
+        animation-fill-mode: forwards;
     }
 
     .answered {
@@ -12,15 +36,15 @@
         }
 
         &.isright {
-            .button-outline {
-                color: #00ff00;
-                outline-color: #00ff00;
-                border-color: #00ff00;
-            }
+            // .button-outline {
+            //     color: #00ff00;
+            //     outline-color: #00ff00;
+            //     border-color: #00ff00;
+            // }
 
-            .option.answer {
-                background-color: #00ff00;
-            }
+            // .option.answer {
+            //     background-color: #00ff00;
+            // }
         }
     }
 
@@ -39,6 +63,26 @@
         }
     }
 
+    .hasimg {
+        .option {
+            width: 50%;
+            display: inline-block;
+
+            .item-inner {
+                justify-content: center;
+            }
+
+            .item-title {
+                display: none;
+            }
+
+            .option-image {
+                max-width: 98%;
+                max-height: 98px;
+            }
+        }
+    }
+
     .button-outline {
         font-size: 22px;
         height: 66px;
@@ -53,6 +97,24 @@
 
         &.hide {
             opacity: 0;
+        }
+    }
+
+    .loading-bar {
+        position: relative;
+        height: 10px;
+        border-radius: 5px;
+        overflow: hidden;
+
+        .bar {
+            height: 10px;
+            width: 100%;
+            background-color: #007aff;
+            animation-name: loading_bar;
+            animation-duration: 7.5s;
+            animation-iteration-count: 1;
+            animation-timing-function: linear;
+            animation-fill-mode: forwards;
         }
     }
 }
@@ -105,4 +167,41 @@
 .full {
     padding: 0px;
     margin: 0px;
+}
+
+
+#main-view {
+    .navbar {
+        color: #fff;
+        background-color: #ff2d51;
+
+        .link {
+            color: #fff;
+        }
+    }
+
+    .page-content {
+        background-color: #fff2f4;
+    }
+
+    .list {
+        background-color: #fff2f4;
+
+        >ul {
+            background-color: #fffbf2;
+        }
+    }
+
+    .button-fill {
+        font-size: 20px;
+        height: 38px;
+        line-height: 38px;
+        background-color: #ff64ae;
+        width: 60%;
+        margin: 0px auto;
+    }
+
+    .home-list {
+        margin-bottom: 5px;
+    }
 }

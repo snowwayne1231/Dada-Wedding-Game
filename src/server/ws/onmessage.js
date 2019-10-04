@@ -72,29 +72,36 @@ function onmessage(ws, clients, msg) {
             break;
         case 'name':
             var name = incomeData.name;
-            var data = nameMapData[name];
+            var table = incomeData.table;
+            var say = incomeData.say;
+            var merged_name = `${table}_${name}`;
+            var data = nameMapData[merged_name];
             var isDoubleNaming = !!data;
             var address = ws.handshake ? (ws.handshake.address || '::WiFi') : 'none';
+
             if (isDoubleNaming) {
+
                 if (data.address == address) {
                     // is self
-                    ws.name = name;
+                    ws.name = merged_name;
                     emit(data);
                 } else {
-                    emit({error: '名稱與他人重復, 請重新輸入其他名稱', dispatch: 'SET_NAME'});
+                    emit({error: '名稱與他人重復, 請重新輸入其他名稱'});
                 }
 
             } else {
+
                 var newAnswers = questions.map((q) => new Array(q.length).fill(0).map(e => {return {a:-1, t:0}}));
-                var newDate = {name, address, answers: newAnswers};
-                nameMapData[name] = newDate;
-                ws.name = name;
+                var newDate = {name, table, say, address, answers: newAnswers};
+                nameMapData[merged_name] = newDate;
+                ws.name = merged_name;
                 emit(newDate);
+
             }
             break;
         case 'answering':
-            var name = ws.name;
-            var data = nameMapData[name];
+            var merged_name = ws.name;
+            var data = nameMapData[merged_name];
             var ans = parseInt(incomeData.answer, 10);
 
             if (data) {
@@ -151,13 +158,13 @@ function onmessage(ws, clients, msg) {
 }
 
 
-function getMap() {
-    return nameMapData;
+function getData() {
+    return {map: nameMapData, opening};
 }
 
 
 
 module.exports = {
     onmessage,
-    getMap,
+    getData,
 }
