@@ -9,7 +9,7 @@
     "dev-client": "webpack --config ./build/webpack.config.dev.js --watch",
     "dev": "webpack-dev-server --config ./build/webpack.config.dev.js",
     "prod": "webpack-dev-server --config ./build/webpack.config.prod.js",
-    "start": "npm run dev"
+    "start": "node ./src/server/server.js"
   },
   "keywords": [
     "ios",
