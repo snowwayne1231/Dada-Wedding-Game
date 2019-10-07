@@ -84,6 +84,7 @@ function onmessage(ws, clients, msg) {
                 if (data.address == address) {
                     // is self
                     ws.name = merged_name;
+                    data.say = say;
                     emit(data);
                 } else {
                     emit({error: '名稱與他人重復, 請重新輸入其他名稱'});

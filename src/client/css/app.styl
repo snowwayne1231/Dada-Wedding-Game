@@ -30,9 +30,9 @@
     .answered {
 
         .button-outline {
-            color: #ff0000;
-            outline-color: #ff0000;
-            border-color: #ff0000;
+            color: #ff6060;
+            outline-color: #ff6060;
+            border-color: #ff6060;
         }
 
         &.isright {
@@ -54,12 +54,12 @@
 
         &.picking {
             color: #fff;
-            background-color: #0077ff;
+            background-color: #51aaff;
         }
 
         &.answer {
             color: #fff;
-            background-color: #ff0000;
+            background-color: #ff6060;
         }
     }
 
@@ -89,10 +89,13 @@
         line-height: 64px;
         transition: opacity 0.3s ease;
         opacity: 1;
+        color: #51aaff;
+        outline-color: #51aaff;
+        border-color: #51aaff;
 
         &.active-state {
             color: #fff;
-            background-color:#0077ff;
+            background-color:#51aaff;
         }
 
         &.hide {
@@ -109,9 +112,9 @@
         .bar {
             height: 10px;
             width: 100%;
-            background-color: #007aff;
+            background-color: #51aaff;
             animation-name: loading_bar;
-            animation-duration: 7.5s;
+            animation-duration: 7s;
             animation-iteration-count: 1;
             animation-timing-function: linear;
             animation-fill-mode: forwards;
@@ -203,5 +206,12 @@
 
     .home-list {
         margin-bottom: 5px;
+    }
+
+    .edit-btn {
+        position: absolute;
+        right: 0px;
+        top: 0px;
+        color: #e65fa0;
     }
 }

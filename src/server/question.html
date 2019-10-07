@@ -1,0 +1,195 @@
+<!doctype html>
+<html>
+    <head>
+        <title>YODA當前問答</title>
+        <style>
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body { font: 24px Helvetica, Arial; background-color: #fff2f4; position: relative; height: 100vh; }
+            input { width: 340px; height: 50px; line-height: 46px; text-align: center; font-size: 24px; }
+            table {
+                text-align: center;
+                margin: 0px auto;
+            }
+
+            #meta {
+
+            }
+
+            #meta table {
+                width: 80%;
+                margin: 15px auto;
+            }
+
+            #meta table {
+                color: #ff006a;
+                border: 1px solid #ff006a;
+            }
+
+            #meta table td:first-child {
+                width: 25%;
+            }
+
+            #meta table td:nth-child(2) {
+                width: 10%;
+            }
+
+            #meta .bar {
+                position: relative;
+                text-align: left;
+            }
+
+            #meta .bar-inner {
+                width: 0%;
+                height: 40px;
+                background-color: #f44;
+                display: inline-block;
+                transition: width 0.5s linear;
+            }
+
+            #headline {
+                font-size: 32px;
+                line-height: 50px;
+                border: 1px solid #ff006a;
+            }
+
+
+        </style>
+        <script src="/socket.io/socket.io.js"></script>
+    </head>
+<body>
+    <div id="meta">
+        <table id="">
+            <tbody>
+                <tr>
+                    <th colspan="5" id="headline">題目</th>
+                </tr>
+                <tr>
+                    <td id="option_1"></td>
+                    <td><span id="option_1_num">0</span><span>票</span></td>
+                    <td colspan="3"><div class="bar"><i id="option_1_num_inner" class="bar-inner"></i></div></td>
+                </tr>
+                <tr>
+                    <td id="option_2"></td>
+                    <td><span id="option_2_num">0</span><span>票</span></td>
+                    <td colspan="3"><div class="bar"><i id="option_2_num_inner" class="bar-inner"></i></div></td>
+                </tr>
+                <tr>
+                    <td id="option_3"></td>
+                    <td><span id="option_3_num">0</span><span>票</span></td>
+                    <td colspan="3"><div class="bar"><i id="option_3_num_inner" class="bar-inner"></i></div></td>
+                </tr>
+                <tr>
+                    <td id="option_4"></td>
+                    <td><span id="option_4_num">0</span><span>票</span></td>
+                    <td colspan="3"><div class="bar"><i id="option_4_num_inner" class="bar-inner"></i></div></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        window.globalData = {};
+        var dom_headline = document.getElementById('headline');
+        var dom_options = [
+            document.getElementById('option_1'),
+            document.getElementById('option_2'),
+            document.getElementById('option_3'),
+            document.getElementById('option_4'),
+        ];
+        var dom_options_num = [
+            document.getElementById('option_1_num'),
+            document.getElementById('option_2_num'),
+            document.getElementById('option_3_num'),
+            document.getElementById('option_4_num'),
+        ];
+        var dom_options_num_inner = [
+            document.getElementById('option_1_num_inner'),
+            document.getElementById('option_2_num_inner'),
+            document.getElementById('option_3_num_inner'),
+            document.getElementById('option_4_num_inner'),
+        ];
+
+        var socket = io();
+        socket.on('connect', () => {
+            emit({ type: 'subscribe' });
+            emit({ type: 'get_questions' });
+        });
+
+        socket.on('message', (msg) => {
+            console.log(msg);
+            switch (msg.type) {
+                case 'subscribe':
+                    var dataMap = msg.payload.map;
+                    var dataOpening = msg.payload.opening;
+                    var questions = window.globalData.questions;
+                    var answers = window.globalData.answers;
+
+                    if (questions) {
+
+                        var sess = dataOpening.session;
+                        var qidx = dataOpening.question;
+                        if (questions[sess] && questions[sess][qidx]) {
+                            var thisQuestion = questions[sess][qidx];
+                            dom_headline.innerText = thisQuestion.headline;
+                            var options = thisQuestion.options;
+                            dom_options.map((ele, i) => {
+                                var op = options[i];
+                                ele.innerText = op;
+                            });
+
+
+                            var nums = [0,0,0,0];
+                            var total_num = 0;
+
+                            Object.keys(dataMap).map(name => {
+                                var data = dataMap[name];
+                                var answers = data.answers;
+                                var thisAns = answers[sess][qidx] ? answers[sess][qidx].a : -1;
+                                if (!isNaN(thisAns) && nums[thisAns] >= 0) {
+                                    nums[thisAns] += 1;
+                                }
+                                total_num += 1;
+                            });
+
+                            dom_options_num.map((ele, i) => {
+                                var num = nums[i];
+                                ele.innerText = num;
+                            });
+
+                            dom_options_num_inner.map((ele, i) => {
+                                var num = nums[i];
+                                var width = num == 0
+                                    ? 0
+                                    : ((num / total_num) * 100).toFixed(2);
+                                ele.style.width = `${width}%`;
+                            });
+
+                        }
+
+
+
+                    }
+                break;
+                case 'get_questions':
+                    var questions = msg.payload;
+                    var answers = questions.map((sess, sidx) => {
+                        return sess.map((question, qidx) => {
+                            return question.answer;
+                        });
+                    });
+
+                    window.globalData.questions = questions;
+                    window.globalData.answers = answers;
+                break;
+                case 'error': return window.alert(msg.msg);
+                default:
+            }
+        });
+
+        function emit(data) {
+            return socket.emit('message', JSON.stringify(data));
+        }
+
+    </script>
+</body>
+</html>

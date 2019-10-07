@@ -73,8 +73,10 @@
         </table>
     </div>
     <script>
-        //var pwd = window.prompt('請輸入密碼?');
-        //if (pwd != 'yoda') { document.body.innerHTML = ''; location.href = '/'; }
+        if (!location.host.match(/127.0.0.1|localhost/i)) {
+            var pwd = window.prompt('請輸入密碼?');
+            if (pwd != 'yoda') { document.body.innerHTML = ''; location.href = '/'; }
+        }
     </script>
     <script>
         const maxMsecond = 8000;
@@ -159,24 +161,27 @@
         function onClickActivate() {
             var sess = parseInt(input_session.value, 10);
             var qt = parseInt(input_question.value, 10);
+            var questions = window.globalData.questions;
+            if (questions && questions[sess] && questions[sess][qt]) {
+                emit({
+                    type: 'change_opening',
+                    session: sess,
+                    question: qt,
+                });
 
-            emit({
-                type: 'change_opening',
-                session: sess,
-                question: qt,
-            });
+                timeoutGet();
 
-            timeoutGet();
-
-            //window._close_timer = window.setTimeout(onClickClose, maxMsecond);
-            window._clock_st = new Date().getTime();
-            if (!window._interval_clock_timer && qt >= 0) {
-                window._interval_clock_timer = window.setInterval(() => {
-                    var second = Math.min(new Date().getTime() - window._clock_st, maxMsecond) / 1000;
-                    input_clock.value = second.toFixed(2);
-                }, 200);
+                //window._close_timer = window.setTimeout(onClickClose, maxMsecond);
+                window._clock_st = new Date().getTime();
+                if (!window._interval_clock_timer && qt >= 0) {
+                    window._interval_clock_timer = window.setInterval(() => {
+                        var second = Math.min(new Date().getTime() - window._clock_st, maxMsecond) / 1000;
+                        input_clock.value = second.toFixed(2);
+                    }, 200);
+                }
+            } else {
+                window.alert('錯誤的題號');
             }
-
         }
 
         function onClickClose() {

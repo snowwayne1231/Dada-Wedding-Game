@@ -18,6 +18,7 @@ const js_file_path = path.resolve(__dirname + '/../../www/app.js');
 const css_file_path = path.resolve(__dirname + '/../../www/app.css');
 const server_file_path = path.resolve(__dirname + '/server.html');
 const dashboard_file_path = path.resolve(__dirname + '/dashboard.html');
+const question_file_path = path.resolve(__dirname + '/question.html');
 
 app.get('/', (req, res) => {
     res.sendFile(index_file_path);
@@ -37,6 +38,10 @@ app.get('/admin', (req, res) => {
 
 app.get('/dashboard', (req, res) => {
     res.sendFile(dashboard_file_path);
+});
+
+app.get('/question', (req, res) => {
+    res.sendFile(question_file_path);
 });
 
 io.on('connection', function(socket){

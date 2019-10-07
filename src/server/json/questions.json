@@ -1,9 +1,7 @@
 [
     [
-        {"headline": "Dada的弱點是什麼?", "options": ["自負", "白目", "懶惰", "善良"], "answer": 3},
-        {"headline": "哪組貼圖是新人最愛用的?", "options": ["白白日記", "臭跩貓", "寶寶不說", "熊大＆兔兔"], "answer": 1},
-        {"headline": "哪一隻是Dada現在養的狗?", "options": ["豆豆", "阿旺", "瑪莎", "妹妹"], "options_img": ["https://ichef.bbci.co.uk/news/624/cpsprodpb/EC63/production/_104451506_kiwivictoire.jpg", "https://ichef.bbci.co.uk/news/624/cpsprodpb/EC63/production/_104451506_kiwivictoire.jpg", "https://ichef.bbci.co.uk/news/624/cpsprodpb/EC63/production/_104451506_kiwivictoire.jpg", "https://ichef.bbci.co.uk/news/624/cpsprodpb/EC63/production/_104451506_kiwivictoire.jpg"], "answer": 2},
-        {"headline": "Yoyo的婚戒刻著\"永遠の愛と幸福 Yo&Da ♥ 2019\"，請問Dada的婚戒刻什麼?", "options": ["永遠の幸福と愛 Da&Yo ♥ 2019 ", "no permanent friends, nor permanent enemies,nothing permanent", "力があなたと共にあるように Yo & Da  2019", "Eternal love and happiness Yo & Da  2019"], "answer": 2}
+        {"headline": "芝麻街美語大多角色是幾跟手指頭?", "options": ["2", "3", "4", "5"], "answer": 2},
+        {"headline": "今天音樂表演的三姊妹,與新人是什麼關係?", "options": ["Dada媽媽的爸爸的哥哥的兒子的表弟的老婆的女兒", "Dada爸爸的媽媽的表妹的岳母的女婿的連襟的姪兒", "Dada媽媽的爺爺的三嫂的姑媽的女兒的兒子的外甥", "Dada爸爸的奶奶的妯娌的姨甥的兒媳的女兒的姐姐"], "answer": 0}
     ],
     [
         {"headline": "Dada的弱點是什麼?", "options": ["自負", "白目", "懶惰", "善良"], "answer": 3},
@@ -13,9 +11,9 @@
         {"headline": "哪一個不是Dada的興趣?", "options": ["滑雪", "賭博", "桌遊", "打羽球"], "answer": 3},
         {"headline": "哪一個是Yoyo現在喜愛的卡通人物?", "options": ["海綿寶寶", "小小兵", "粉紅屁桃", "蠟筆小新"], "answer": 1},
         {"headline": "哪一個是新人最常約會的地方?", "options": ["夜市", "電影院", "河濱公園", "Motel"], "answer": 0},
-        {"headline": "哪一隻是Dada現在養的狗?", "options": ["豆豆", "阿旺", "瑪莎", "妹妹"], "options_img": ["https://ichef.bbci.co.uk/news/624/cpsprodpb/EC63/production/_104451506_kiwivictoire.jpg", "https://ichef.bbci.co.uk/news/624/cpsprodpb/EC63/production/_104451506_kiwivictoire.jpg", "https://ichef.bbci.co.uk/news/624/cpsprodpb/EC63/production/_104451506_kiwivictoire.jpg", "https://ichef.bbci.co.uk/news/624/cpsprodpb/EC63/production/_104451506_kiwivictoire.jpg"], "answer": 2},
-        {"headline": "哪一種是新人都愛吃的食物?", "options": ["日本料理", "西式牛排", "台式滷味", "義大利麵"], "answer": 3},
-        {"headline": "哪組貼圖是新人最愛用的?", "options": ["白白日記", "臭跩貓", "寶寶不說", "熊大＆兔兔"], "answer": 1},
+        {"headline": "哪一隻不是Dada養過的狗?", "options": ["豆豆", "阿旺", "瑪莎", "妹妹"], "options_img": ["https://i.imgur.com/hIfIDug.jpg", "https://i.imgur.com/o9DJP87.jpg", "https://i.imgur.com/Cbbi7Pg.jpg", "https://i.imgur.com/bO3vbGD.jpg"], "answer": 2},
+        {"headline": "哪一種是新人都愛吃的食物?", "options": ["日本料理", "西式牛排", "台式滷味", "義大利麵"], "options_img": ["https://i.imgur.com/KVCGnBF.jpg", "https://i.imgur.com/SE09AVE.jpg", "https://i.imgur.com/U61OfhV.jpg", "https://i.imgur.com/LyM4NFg.jpg"], "answer": 3},
+        {"headline": "哪組貼圖是新人最愛用的?", "options": ["白白日記", "臭跩貓", "寶寶不說", "熊大＆兔兔"], "options_img": ["https://i.imgur.com/GDh6pQY.jpg", "https://i.imgur.com/j6O6nX6.jpg", "https://i.imgur.com/J6r0XS3.jpg", "https://i.imgur.com/Eqr9uy9.jpg"], "answer": 1},
         {"headline": "Yoyo的婚戒刻著\"永遠の愛と幸福 Yo&Da ♥ 2019\"，請問Dada的婚戒刻什麼?", "options": ["永遠の幸福と愛 Da&Yo ♥ 2019 ", "no permanent friends, nor permanent enemies,nothing permanent", "力があなたと共にあるように Yo & Da  2019", "Eternal love and happiness Yo & Da  2019"], "answer": 2}
     ]
 ]

@@ -35,7 +35,7 @@ export default {
             return self.$f7route.path.match(/puzzle.2./g) ? 1 : 0;
         },
         sessionTitle(self) {
-            return self.session == 0 ? '主持人示範' : 'YODA猜謎';
+            return self.session == 0 ? '範例' : 'YODA猜謎';
         },
         thisQuestions(self) {
             return self.questions[self.session] || [];
@@ -69,11 +69,11 @@ export default {
         isRight(self) {
             return self.answer == self.question.answer;
         },
-        spendTime(self) {
-            return self.answered
-                ? (self.answers[self.opening.session][self.opening.question].t) / 1000
-                : 0;
-        },
+        // spendTime(self) {
+        //     return self.answered
+        //         ? (self.answers[self.opening.session][self.opening.question].t) / 1000
+        //         : 0;
+        // },
     },
     mounted() {
         if (!this.name) {
@@ -84,6 +84,12 @@ export default {
         console.log('puzzle', this);
         this.$store.dispatch('GET_OPENING');
         // this.startInterval();
+
+        var anss = this.answers;
+        var oping = this.opening;
+        if (anss && anss[oping.session] && anss[oping.session][oping.question] && anss[oping.session][oping.question].a != -1) {
+            this.answer = anss[oping.session][oping.question].a || -1;
+        }
     },
     methods: {
         startInterval() {
@@ -116,10 +122,17 @@ export default {
             }
         },
         doWhenTimeEnd() {
-            this.answer = 9;
+            if (this.answer >= 0) {return;}
+            this.answer = this.pickingOption >= 0 ? this.pickingOption : 9;
             this.pickingOption = -1;
             this._delay_timer = null;
+            this.$store.dispatch('ANSWERING', this.answer);
         },
+    },
+    beforeDestroy() {
+        if (this._delay_timer) {
+            window.clearTimeout(this._delay_timer);
+        }
     },
 }
 </script>

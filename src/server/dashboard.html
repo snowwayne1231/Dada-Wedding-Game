@@ -19,6 +19,10 @@
                 width: 226px;
             }
 
+            #meta table th:first-child {
+                width: 80px;
+            }
+
             #question_list tr:nth-child(odd) {
                 background-color: #ffd3f0;
             }
@@ -41,11 +45,12 @@
             }
 
             #meta {
-                height: 50%;
+                height: 100%;
                 overflow-y: auto;
             }
 
             #now-question {
+                display: none;
                 height: 50%;
             }
 
@@ -220,11 +225,19 @@
             loc.answers.map((sess, sidx) => {
                 if (sidx != window.globalData.session) {return;} // 示範題
                 sess.map((qt, qidx) => {
-                    if (answers[sidx] && !isNaN(answers[sidx][qidx]) && answers[sidx][qidx] == qt.a) {
-                        rights += 1;
-                        rights_time += Math.min(qt.t, maxMsecond);
+                    if (answers[sidx] && !isNaN(answers[sidx][qidx])) {
+                        if (answers[sidx][qidx] == qt.a) {
+                            rights += 1;
+                            rights_time += Math.min(qt.t, maxMsecond);
+                        } else if (qt.a == -1) {
+                            // not answering
+                            rights_time += maxMsecond;
+                        } else {
+                            // take wrong answer
+                            rights_time += maxMsecond;
+                        }
                     } else {
-                        rights_time += maxMsecond;
+                        //rights_time += maxMsecond;
                     }
                     total_time += qt.t;
                 });
