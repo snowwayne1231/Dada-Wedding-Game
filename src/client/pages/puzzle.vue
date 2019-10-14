@@ -24,7 +24,7 @@ import { mapState } from 'vuex';
 export default {
     data() {
         return {
-            maxMSecond: 8000,
+            maxMSecond: 6000,
             pickingOption: -1,
             answer: -1,
         };
